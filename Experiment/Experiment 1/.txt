@@ -1,0 +1,80 @@
+Cloudy_1
+Accuracy : 0.9751131221719457
+Backbone Time : 0.03728222037872038
+Total Detection Time : 0.03788291005527272
+[[197   0]
+ [ 11 234]]
+Mean_conf : 0.5213773138505806
+              precision    recall  f1-score   support
+
+       Empty       0.95      1.00      0.97       197
+    Occupied       1.00      0.96      0.98       245
+
+    accuracy                           0.98       442
+   macro avg       0.97      0.98      0.97       442
+weighted avg       0.98      0.98      0.98       442
+
+---------------
+
+
+
+Rainy_1
+Accuracy : 0.896
+Backbone Time : 0.03721473566691081
+Total Detection Time : 0.03786101277669271
+[[180   1]
+ [ 38 156]]
+Mean_conf : 0.41052965394651986
+              precision    recall  f1-score   support
+
+       Empty       0.83      0.99      0.90       181
+    Occupied       0.99      0.80      0.89       194
+
+    accuracy                           0.90       375
+   macro avg       0.91      0.90      0.90       375
+weighted avg       0.91      0.90      0.90       375
+
+---------------
+
+
+
+Sunny_1
+Accuracy : 0.9207606973058637
+Backbone Time : 0.03742172676485427
+Total Detection Time : 0.0380454649071308
+[[260   4]
+ [ 46 321]]
+Mean_conf : 0.513955974365349
+              precision    recall  f1-score   support
+
+       Empty       0.85      0.98      0.91       264
+    Occupied       0.99      0.87      0.93       367
+
+    accuracy                           0.92       631
+   macro avg       0.92      0.93      0.92       631
+weighted avg       0.93      0.92      0.92       631
+
+---------------
+
+
+
+Cloudy_2
+Accuracy : 0.9751131221719457
+Backbone Time : 0.037462632041171666
+Total Detection Time : 0.038088398281805116
+[[211   1]
+ [ 10 220]]
+Mean_conf : 0.4969064677241485
+              precision    recall  f1-score   support
+
+       Empty       0.95      1.00      0.97       212
+    Occupied       1.00      0.96      0.98       230
+
+    accuracy                           0.98       442
+   macro avg       0.98      0.98      0.98       442
+weighted avg       0.98      0.98      0.98       442
+
+---------------
+
+
+
