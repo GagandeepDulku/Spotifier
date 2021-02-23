@@ -17,8 +17,8 @@ class Output_Map():
 
     def print_result_on_map(self, result):
         
-        prediction = result["Prediction Dict"] # Extrating detection output
-        self.base = cv2.imread("base.png") # Setting up the base image
+        prediction = result["Prediction Dict"]   # Extrating detection output
+        self.base = cv2.imread("base.png")       # Setting up the base image
 
         for k in self.map_coord_dict.keys():
             pos = self.map_coord_dict[k]

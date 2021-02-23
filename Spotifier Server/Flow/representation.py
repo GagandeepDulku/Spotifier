@@ -12,22 +12,11 @@ class Representation():
         self.occupied_rep = (0, 0, 255)
         self.vacant_rep = (0, 255, 154)
         
-#         self.spot_list = spot_list
-        
-#         IMAGE_DIR = os.path.join(ROOT_DIR, "Resources", "Images")
-        
-        
-#         self.empty_img = plt.imread(os.path.join(IMAGE_DIR, "Empty.png"))
-#         self.occupied_img = plt.imread(os.path.join(IMAGE_DIR, "Occupied.png"))
-        
         
         self.representation_dict = {"Empty":self.vacant_rep,
                                     "Occupied": self.occupied_rep}
         
         
-        
-    def get_representation(self, label):
-        return self.representation_dict[label]
         
         
         
@@ -102,7 +91,7 @@ class Representation():
                         change_list[ind] = change_list[ind]+1
 
         # Get representation (colour) of the prediction
-            output_rep = self.get_representation(pred)
+            output_rep = self.representation_dict[label]
 
         # Draw status on Frame
             frame = cv2.rectangle(frame, coord[0], coord[2], output_rep, 2)

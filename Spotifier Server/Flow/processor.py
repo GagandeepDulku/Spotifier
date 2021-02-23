@@ -24,6 +24,19 @@ class Processor():
             
             
     def forward_pass(self, occ_list, backbone_list, use_occ_result = True):
+        
+        """
+        This method processes detection model's output and occlusion locator ooutput to produce final detection output
+        Params
+            occ_list       : Output of occlusion locator
+            backbone_list  : Output of detection model
+            use_occ_result : Enable/disable the effect of occlusion locator 
+
+        Returns
+            final_prediction_dict : dictionay containing final detection output
+        
+        """
+        
         final_prediction_dict = {}
          
         for spot_ind, spot_name in enumerate(list(self.spot_dict.keys())):
@@ -49,6 +62,21 @@ class Processor():
         return final_prediction_dict
     
     def get_occlusion_status(self, spot_cord, occlusion_list, min_thres, max_thres, occ_overflow_thres):
+        
+        """
+        It evaluates any potential occlusion by mathcing overlapping between pixel coordinates of parking spot and detected objects
+        
+        Params:
+            spot_cord          : Pixel coordinates of the parking spot
+            occlusion_list     : List of objects detected by occlusion locator, it includes pixel coordinates
+            min_thres          : Minimum threshold of overlap
+            max_thres          : Maximum threshold of overlap
+            occ_overflow_thres : Threshold of overflow
+
+        Returns:
+            occ_dict : Output of occlusion related conflict represented as dictionary
+        
+        """
         
         occ_dict = {"occlusion_type_ind" : 0} # default No occlusion
         for ind, it in enumerate(occlusion_list):

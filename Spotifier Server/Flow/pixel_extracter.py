@@ -15,7 +15,13 @@ class PixelExtracter():
         
     def seek_spot_lists(self, xml_path):
         
-#         spot_list = self.read_spot_coordinates_from_xml(xml_path)
+        """
+        It reads the pixel coordinates from the xml file and create a list of pixel coordinats of all parking spots mentioned in the xml file
+        Params    
+            xml_path  : Path to the xml file
+        Returns
+            spot_list : list of tuples containing pixel coordinates of parking spots
+        """
         
         spot_dict = self.get_pixel_cordinate_from_xml(xml_path)
         self.spot_dict = spot_dict
@@ -23,6 +29,17 @@ class PixelExtracter():
         return spot_list
     
     def get_pixel_cordinate_from_xml(self, path):
+        
+        """
+        It reads the xml file and process the data and create a dictionary representation of all pixel coordinates for respective parking spots
+        Params
+            path      : Path to the xml file
+        Returns
+            spot_dict : Dictionary containing all pixel coordinates for respective spots
+            
+        """
+        
+        
         spot_dict = {}
         try:
             xml_doc = minidom.parse(path)
@@ -75,6 +92,10 @@ class PixelExtracter():
         
         # look for xml_file
         
+        
+        
+ #------------- LEGECY CODE USED FOR EARLIER XML FILES AND SET UP------------------------------       
+        
     def read_spot_coordinates_from_xml(self, path, spot_tag="space", coordinate_tag="point", x_attrib="x", y_attrib="y", angle_tag="angle", angle_attrib="d"):
         """
         Read xml file and returns a list of parking spot's meta data as rows(list), each row = [(4 coordinates ,each is tuple), angle of tiltation]
@@ -107,15 +128,19 @@ class PixelExtracter():
     
     def mask_img_region(self, image, coordinate_list):
         
+        """
+        This method is used to mask the region fo pixel given as pixel coordinates. It is used if selected region needed to be cropped out.
+        """
         
-        # mask to locate cropping region (CR)
+        
+      # Mask to locate cropping region (CR)
         mask = np.ones((image.shape),dtype=np.uint8)
         mask.fill(255)
         
-        # mark the coorinate region as black
+      # Mark the coorinate region as black
         masked_image = cv2.fillPoly(mask, np.array([coordinate_list], dtype=np.int32),0)
         
-        # extract coorinate region from original image and rest is white 
+      # Extract coorinate region from original image and rest is white 
         cropped = cv2.bitwise_or(image, masked_image)
         
         return cropped
@@ -126,7 +151,8 @@ class PixelExtracter():
 
         image_center = tuple(np.array(image.shape[1::-1]) / 2)
         rot_mat = cv2.getRotationMatrix2D(image_center, degree_of_rotation, 1.0)
-        ri = cv2.warpAffine(image, rot_mat, image.shape[1::-1],  flags=cv2.INTER_LINEAR, borderMode = cv2.BORDER_CONSTANT,borderValue = (255,255,255))# borderMode (constant) and borderValue are important for maintaiing consistency 
+     # borderMode (constant) and borderValue are important for maintaiing consistency    
+        ri = cv2.warpAffine(image, rot_mat, image.shape[1::-1],  flags=cv2.INTER_LINEAR, borderMode = cv2.BORDER_CONSTANT,borderValue = (255,255,255))
         return ri
 
     def crop_image_by_coordinates(self, input_img, coordinate_list):
@@ -149,7 +175,7 @@ class PixelExtracter():
             selected_region = self.rotate_and_wrap_image(selected_region, degree_of_rotation)
 
 
-        # remove the extra white and black pixels from the CR
+    # remove the extra white and black pixels from the CR
         print(selected_region.shape)
         print(selected_region)
 #         rows, col = np.where((selected_region[:,:,1] > 0)&(selected_region[:,:,1] < 255))

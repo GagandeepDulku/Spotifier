@@ -10,7 +10,12 @@ class BackboneDetector():
     
     def __init__(self, model_name, root_dir, m2_name = "Mobilenet V2"):
         
-        self.model_arg = model_name
+        """
+        CONSTRUCTOR
+            model_name : Name that determine which detection model to be used
+            root_dir   : Path to the root directory of the project
+            m2_name    : Argument to update the mobilenet version 2 detection model (if required)
+        """
         
         self.m2_model = None
         self.mAlex_model = None
@@ -19,15 +24,15 @@ class BackboneDetector():
         self.label_dict = {0 : "Empty", 1 : "Occupied"}
         
         
-        if self.model_arg == "m2":
+        if model_name == "m2":
             self.load_mobilenet_v2(root_dir, m2_name)
             self.prediction_method = self.m2_prediction
             self.model_name = "Mobilenet V2"
-        if self.model_arg == "mAlex":
+        if model_name == "mAlex":
             self.load_miniAlex(root_dir)
             self.prediction_method = self.mAlex_prediction
             self.model_name = "Mini Alexnet"
-        if self.model_arg == "vgg-f":
+        if model_name == "vgg-f":
             self.load_vggf(root_dir)
             self.prediction_method = self.vggf_bkbn_pass
             self.model_name = "VGG_F-SVM"
@@ -37,9 +42,17 @@ class BackboneDetector():
     def backbone_detection_all(self, input_image, extractor_obj):
         
          
-        """ It runs the backbone network for all parking spot image in list (comp_img) 
-            
-            Sets the prediction into class dict (self.backbone_pred)
+        """ It performs the occupency detection on each individual parking spot by extracting pixels for individual parking spots using extractor object and calling respective prediction method.
+        
+        Params
+        input_image   : Raw input image of the parking lot
+        extractor_obj : Object of pixel extractor class containing information of individual parking lot
+        
+        Returns
+        prediction_dict : Dictionay containing detection output of individual parking spot
+        time            : time taken to finish entire detection (miliseconds)
+        
+        
         
         """
         prediction_dict = {}
@@ -66,6 +79,13 @@ class BackboneDetector():
 #     MOBILENET V2    
     def load_mobilenet_v2(self, root_dir, m2_name):
         
+        """
+        It loads the tensorflow model of mobilenet version 2 into an object attribute
+        
+        root_dir : Root directory of the project
+        m2_name  : Name of the target directory in model folder
+        """
+        
 #         model_path = os.path.join(root_dir, "Models", "Mobilenet V2")
         model_path = os.path.join(root_dir, "Models", m2_name)
         
@@ -75,6 +95,21 @@ class BackboneDetector():
        
         
     def m2_prediction(self, img_list):
+        
+        """
+           It perfomrs the detection on each image provided in the argument using mobilenet version 2 model and returns the detection, time taken and confidence of prediction.
+           
+           Param
+               img_list : List of individual parking spot
+           
+           Returns
+               Detection output list
+               Time taken by model to process all images,
+               Confidence/probability of car being parked at individual parking spot
+           
+           
+        """
+        
         temp_list = []
         
         for img in img_list:
@@ -92,6 +127,14 @@ class BackboneDetector():
 #    MINI ALEXNET
     
     def load_miniAlex(self, root_dir):
+        
+        """
+        It loads the caffe model of the mini Alexnet as a class attibute
+        
+        root_dir : Path to the root directory of the project
+        
+        """
+        
         print("Loading model")
         mini_alex_net_caffe_path = os.path.join(root_dir, "Models", "Mini Alexnet")
         prototxt = os.path.join(mini_alex_net_caffe_path, "deploy.prototxt")
@@ -102,6 +145,19 @@ class BackboneDetector():
         
         
     def mAlex_prediction(self, img_list):
+        
+        """
+        It perfomrs the detection on each image provided in the argument using mini Alexnet model and returns the detection, time taken and confidence of prediction.
+        
+        Param
+               img_list : List of individual parking spot
+           
+           Returns
+               Detection output list
+               Time taken by model to process all images,
+               Confidence/probability of car being parked at individual parking spot
+        
+        """
 
         blob = cv2.dnn.blobFromImages(img_list, 1. / 256, (224, 224), (0, 0, 0))
         self.mAlex_model.setInput(blob)
@@ -115,19 +171,39 @@ class BackboneDetector():
 #     VGG-F
 
     def load_vggf(self, root_dir):
+        
+        """
+        It loads both parts of the VGG-F detection model
+            tensorflow model which is a feature extractor
+            vgg-f model that acts like final classifier
+        """
+        
         print("Loading Model")
         vgg_f_path = os.path.join(root_dir, "Models", "VGG-F","VGG-f")
         classifier_path = os.path.join(root_dir, "Models", "VGG-F","VGGF_SVM.joblib")
-        self.input_shape = (224, 224, 3) # Pre defined shape of imported model 
-        self.vggf_model = tf.keras.models.load_model(vgg_f_path)
-        self.svm = joblib.load(classifier_path)
+        self.input_shape = (224, 224, 3)                                                 
+        self.vggf_model = tf.keras.models.load_model(vgg_f_path)                         # Feature extractor model
+        self.svm = joblib.load(classifier_path)                                          # Final predictor SVM
         print("Model Loaded")
         
 
     def vggf_bkbn_pass(self, img_list):
         
+         """
+        It perfomrs the detection on each image provided in the argument using VGGF-SVM based detection model and returns the detection, time taken and confidence of prediction.
+        
+        Param
+               img_list : List of individual parking spot
+           
+           Returns
+               Detection output list
+               Time taken by model to process all images,
+               Confidence/probability of car being parked at individual parking spot (Dummy variable to maintain consistency with other models output for dynamic use of the method)
+        
+        """
+        
         temp_list = []
-        prob_list = [] # Dummy variable for probability to maintain consistency with other models detection methods
+        prob_list = []         # Dummy variable for probability to maintain consistency with other models detection methods
         for img in img_list:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             temp_list.append(cv2.resize(img, (224, 224), interpolation = cv2.INTER_AREA))
@@ -135,8 +211,8 @@ class BackboneDetector():
             
         sp = time.time()
         inp_img_list = np.array(temp_list)
-        feature_list = self.vggf_model.predict(inp_img_list)
-        prediction_list = self.svm.predict(feature_list)
+        feature_list = self.vggf_model.predict(inp_img_list)      # Feature extraction
+        prediction_list = self.svm.predict(feature_list)          # Final prediction
         fp = time.time()
         total_time = fp - sp
         return prediction_list.tolist(), total_time, prob_list
