@@ -12,7 +12,19 @@ from Helper.helper import *
 
 class Controller():
     
-    def __init__(self, backbone_name, occ_detection_thres, primary_dir, xml_path = None, classifier_path=None, track_dict_path = "track_dict.dict"):
+    def __init__(self, backbone_name, occ_detection_thres, primary_dir, track_dict_path = "track_dict.dict"):
+        
+        
+        """ 
+        CONSTRUCTOR
+        
+        backbone_name       : Name of the detection model, used for backbone detection instantiation
+        occ_detection_thres : Minimum confidence for occlusion detection to pass as detected entity
+        primary_dir         : Path of the root directory
+        xml_path            : Path to the pri
+        track_dict_path     : Path (including name) of the file where the tracked detectio data is to be saved
+        
+        """
         
      # Setting Root Directory
         sys.path.append(primary_dir)
@@ -103,13 +115,6 @@ class Controller():
         """" Set up video stream (It can be from Video or Camera )
              path_of_video : location of the input video
         """
-        
-      # Display part
-#         PDS_DATASET_DIR = os.path.abspath("../../Dataset/PDS") # Directory where Video is located
-#         path_of_video = os.path.join(PDS_DATASET_DIR,"12_11_4_5hr_vid.h264")
-#         path_of_video = os.path.join(PDS_DATASET_DIR,"Demo Parking Lot.mp4")
-#         path_of_video = os.path.join(PDS_DATASET_DIR,"snake.avi")
-#         path_of_video = os.path.join(PDS_DATASET_DIR,"dynamic_cut.avi")
 
         print(path_of_video)
         self.cap = cv2.VideoCapture(path_of_video)
